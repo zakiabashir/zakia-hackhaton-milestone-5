@@ -1,6 +1,7 @@
+
 document.getElementById('resumeForm')?.addEventListener('submit', function(event) {
     event.preventDefault();
-    
+    // type assertion
     const profile_pictureElement = document.getElementById("profile_picture") as HTMLInputElement;
     const first_nameelement = document.getElementById("first_name") as HTMLInputElement;
     const last_nameElement = document.getElementById("last_name") as HTMLInputElement;
@@ -36,8 +37,8 @@ const dob = dobElement.value;
 const gender = genderElement.value;
 const address = addressElement.value;
 // profile picture
-const profile_picture = profile_pictureElement.files?.[0]
-const profilepictureurl = profile_picture ? URL.createObjectURL(profile_picture) :'';
+const profile_picture = profile_pictureElement.files?.[0];
+const profilepictureurl = profile_picture?URL.createObjectURL(profile_picture) :"";
 const job_title = job_titleElement.value;
 const company_name = company_nameElement.value;
 const start_date = start_dateElement.value;
@@ -63,7 +64,7 @@ const uniquepath = `resume/${cv_path.replace(/\s+/g, '_')}_cv.html`
         const resumeOutput = `
             <h1>Your Generated CV</h1>
 
-            ${profilepictureurl ? `<img src="${profilepictureurl} alt="profile picture" class="profile-pcture"> `: ""}
+            ${profilepictureurl? `<img src="${profilepictureurl} alt="profile picture" class="profile-picture" `: ""}
         <h2>Personal Info  </h2>
         <p><strong>First Name:</strong><span id="edit-first_name" class="editable">  ${first_name} </span></p>
         <p><strong>Last Name:</strong><span id="edit-last_name" class="editable">  ${last_name}</span></p
@@ -99,20 +100,52 @@ const uniquepath = `resume/${cv_path.replace(/\s+/g, '_')}_cv.html`
         
     `;
 // download link creation
-    const downloadlink = document.createElement('a')
-  downloadlink.href = 'data:text/html;charset-utf-8,' + encodeURIComponent(resumeOutput)
-  downloadlink.download = uniquepath;
-  downloadlink.textContent = 'download your 2024 resume';
+const downloadlink = document.createElement('a')
+downloadlink.href = 'data:text/html;charset-utf-8,' + encodeURIComponent(resumeOutput)
+downloadlink.download = uniquepath;
+downloadlink.textContent = 'download your 2024 resume';
 
 // display the output resume
         const resumeOutputElement = document.getElementById('resumeOutput');
         if(resumeOutputElement) {
             resumeOutputElement.innerHTML = resumeOutput;
-            
+            // **==============
+            resumeOutputElement.classList.remove('hidden');
+            // creation of conatainer button
+            const containerbutton = document.createElement('div');
+            containerbutton.id = "containerbutton";
+            resumeOutputElement.appendChild(containerbutton);
+            // add download pdf button
+            const downloadbutton = document.createElement('button');
+            downloadbutton.textContent = "Download as PDF";
+            downloadbutton.addEventListener("click", () => {
+                window.print(); // open the dialog, allowing the user to save as PDF.
+            });
+            containerbutton.appendChild(downloadbutton);
+            // add  shareable link button
+            const sharelinkbutton = document.createElement('button');
+            sharelinkbutton.textContent = "copy shareable Link";
+            sharelinkbutton.addEventListener('click',  () => {
+                try{
+                    // create a unique shareable link
+                    const shareablelink = `https://yourdomain.com/resume/${cv_path.replace(/\s+/g, '_')}_cv.html`;
+                // use clipboard APIto copy the shareablelink
+                navigator.clipboard.writeText(shareablelink);
+                alert ('shareable link copied to clipboard!');
+                }
+                catch(err){
+                    console.error('Failed to copy Link:', err);
+                    alert ('shareable link copied to clipboard. Please try again');
+                }
+            });
+            containerbutton.appendChild(sharelinkbutton);
             // download functionality
             resumeOutputElement.appendChild(downloadlink)
             // editable
         makeEditable();
+        }
+        else {
+            console.error('resume output container not foud');
         }
     } else {
         console.error('Some form fields are missing');
