@@ -24,6 +24,7 @@ header {
   header .logo {
     font-size: 24px;
     font-weight: bold;
+    color: #fb8107;
     border-radius: 2px solid black;
   }
   header .logo:hover {
@@ -36,9 +37,9 @@ header {
   }
   
   header nav a {
-    color: #fff;
+    color: #2f0b11;
     text-decoration: none;
-    font-size: 16px;
+    font-size: 19px;
   }
   header nav a:hover {
     color: #06f566;
@@ -61,10 +62,11 @@ h1{
     line-height: 1.5;
    
 }
-span{
+h1 span{
     color: rgba(196, 254, 6, 0.523);
    
 }
+
 table {
     width: 60%;
     
@@ -126,6 +128,18 @@ button:hover{
 #resumeOutput h2{
     color: rgb(171, 202, 44);
 }
+/* profile picture styling */
+#resumeOutput img{
+display: block;
+margin: 0 auto;
+border: 2px solid rgb(132, 132, 96);
+box-shadow: 2px solid rgb(220, 220, 116);
+border-radius: 500%;
+width: 150px;
+height: 150px;
+object-fit: cover;
+}
+/* footer styling */
 footer{
     border: 2px solid white;
     height:200px ;

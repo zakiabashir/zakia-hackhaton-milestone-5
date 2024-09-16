@@ -1,5 +1,6 @@
 var _a;
 (_a = document.getElementById('resumeForm')) === null || _a === void 0 ? void 0 : _a.addEventListener('submit', function (event) {
+    var _a;
     event.preventDefault();
     var first_nameelement = document.getElementById("first_name");
     var last_nameElement = document.getElementById("last_name");
@@ -25,7 +26,8 @@ var _a;
     var reference_nameElement = document.getElementById("reference_name");
     var reference_contactElement = document.getElementById("reference_contact");
     var cover_letterelement = document.getElementById("cover_letter");
-    if (first_nameelement && last_nameElement && emailElement && phoneelement && dobElement && genderElement && addressElement && profile_pictureElement && job_titleElement && company_nameElement && start_dateElement && end_dateElement && job_descriptionElement && degreeElement && institutionElement && edu_start_dateElement && edu_end_dateElement && gradeElement && skillsElement && languagesElement && hobbiesElement && reference_nameElement && reference_contactElement && cover_letterelement) {
+    var cvpathurlelement = document.getElementById("username");
+    if (first_nameelement && last_nameElement && emailElement && phoneelement && dobElement && genderElement && addressElement && profile_pictureElement && job_titleElement && company_nameElement && start_dateElement && end_dateElement && job_descriptionElement && degreeElement && institutionElement && edu_start_dateElement && edu_end_dateElement && gradeElement && skillsElement && languagesElement && hobbiesElement && reference_nameElement && reference_contactElement && cover_letterelement && cvpathurlelement) {
         var first_name = first_nameelement.value;
         var last_name = last_nameElement.value;
         var Email = emailElement.value;
@@ -33,7 +35,9 @@ var _a;
         var dob = dobElement.value;
         var gender = genderElement.value;
         var address = addressElement.value;
-        var profile_picture = profile_pictureElement.value;
+        // profile picture
+        var profile_picture = (_a = profile_pictureElement.files) === null || _a === void 0 ? void 0 : _a[0];
+        var profilepictureurl = profile_picture ? URL.createObjectURL(profile_picture) : "";
         var job_title = job_titleElement.value;
         var company_name = company_nameElement.value;
         var start_date = start_dateElement.value;
@@ -50,16 +54,51 @@ var _a;
         var reference_name = reference_nameElement.value;
         var reference_contact = reference_contactElement.value;
         var cover_letter = cover_letterelement.value;
-        var resumeOutput = "\n            <h1>Your Generated CV</h1>\n        <h2>Personal Info  </h2>\n        <p><strong>First Name:</strong> ".concat(first_name, "</p>\n        <p><strong>Last Name:</strong> ").concat(last_name, "</p\n       <p><strong> Email: </strong>").concat(emailElement.value, "</p>\n        <p><strong>Phone: </strong>").concat(phoneelement.value, "</p>\n        <p><strong>Date of Birth:</strong>").concat(dob, "</p>\n        <p><strong>Gender: </strong>").concat(gender, "</p>\n       <p><strong> Address: </strong>").concat(address, "</p>\n        <p><strong>Profile Picture:</strong> ").concat(profile_picture, "</p>\n        <h2>Work Experience</h2>\n       <p><strong> Job Title: </strong>").concat(job_title, "</p>\n       <p><strong> Company Name: </strong>").concat(company_name, "</p>\n       <p><strong> Start Date: </strong>").concat(start_date, "</p>\n        <p><strong>End Date::</strong>").concat(end_date, "</p>\n        <p><strong>Job Description: </strong>").concat(job_description, "</p>\n        <h2>Education </h2>\n        <p><strong>Degree: </strong>").concat(degree, "</p>\n       <p><strong>  Institution: </strong>").concat(institution, "</p>\n        <p><strong>Start Date: </strong>").concat(edu_start_date, "</p>\n       <p><strong> End Date: </strong>").concat(edu_end_date, "</p>\n       <p><strong> Grade: </strong>").concat(grade, "</p>\n        <h2>Skills:</h2> \n       <p><strong> Skills:</strong>").concat(skillsElement.value, "</p>\n       <h2> Languages:</h2> \n        <p><strong>Languages: </strong>").concat(languages, "</p><br>\n        <h2>Hobbies:</h2>\n       <p><strong> Hobbies: </strong>").concat(hobbies, "</p>\n        <h2>References:</h2>\n       <p><strong> Reference Name: </strong>").concat(reference_name, "</p>\n       <p><strong> Reference Contact: </strong>").concat(reference_contact, "</p>\n        <h2>Cover Letter:</h2>\n       <p><strong> Cover Letter: </strong>").concat(cover_letter, "</p>\n        \n    ");
+        // cv-path url
+        var cv_path = cvpathurlelement.value;
+        var uniquepath = "resume/".concat(cv_path.replace(/\s+/g, '_'), "_cv.html");
+        var resumeOutput = "\n            <h1>Your Generated CV</h1>\n\n            ".concat(profilepictureurl ? "<img src=\"".concat(profilepictureurl, " alt=\"profile picture\" class=\"profile-pcture\"> ") : "", "\n        <h2>Personal Info  </h2>\n        <p><strong>First Name:</strong><span id=\"edit-first_name\" class=\"editable\">  ").concat(first_name, " </span></p>\n        <p><strong>Last Name:</strong><span id=\"edit-last_name\" class=\"editable\">  ").concat(last_name, "</span></p\n       <p><strong> Email: </strong><span id=\"edit-Email\" class=\"editable\"> ").concat(emailElement.value, "</span></p>\n        <p><strong>Phone: </strong><span id=\"edit-phone\" class=\"editable\"> ").concat(phoneelement.value, "</span></p>\n        <p><strong>Date of Birth:</strong><span id=\"edit-dob\" class=\"editable\"> ").concat(dob, "</span></p>\n        <p><strong>Gender: </strong><span id=\"edit-gender\" class=\"editable\"> ").concat(gender, "</span></p>\n       <p><strong> Address: </strong><span id=\"edit-address\" class=\"editable\"> ").concat(address, "</span></p>\n        \n        <h2>Work Experience</h2>\n       <p><strong> Job Title: </strong><span id=\"edit-job_title\" class=\"editable\"> ").concat(job_title, "</span></p>\n       <p><strong> Company Name: </strong><span id=\"edit-company_name\" class=\"editable\"> ").concat(company_name, "</span></p>\n       <p><strong> Start Date: </strong><span id=\"edit-start_date\" class=\"editable\"> ").concat(start_date, "</span></p>\n        <p><strong>End Date::</strong><span id=\"edit-end_date\" class=\"editable\"> ").concat(end_date, "</span></p>\n        <p><strong>Job Description: </strong><span id=\"edit-job_description\" class=\"editable\"> ").concat(job_description, " </span></p>\n        <h2>Education </h2>\n        <p><strong>Degree: </strong><span id=\"edit-degree\" class=\"editable\">").concat(degree, "  </span></p>\n       <p><strong>  Institution: </strong><span id=\"edit-institution\" class=\"editable\"> ").concat(institution, " </span></p>\n        <p><strong>Start Date: </strong><span id=\"edit-edu_start_date\" class=\"editable\"> ").concat(edu_start_date, " </span></p>\n       <p><strong> End Date: </strong><span id=\"edit-edu_end_date\" class=\"editable\"> ").concat(edu_end_date, " </span></p>\n       <p><strong> Grade: </strong><span id=\"edit-grade\" class=\"editable\"> ").concat(grade, " </span></p>\n        <h2>Skills:</h2> \n       <p><strong> Skills:</strong><span id=\"edit-skils\" class=\"editable\"> ").concat(skillsElement.value, " </span></p>\n       <h2> Languages:</h2> \n        <p><strong>Languages: </strong><span id=\"edit-languages\" class=\"editable\"> ").concat(languages, " </span></p><br>\n        <h2>Hobbies:</h2>\n       <p><strong> Hobbies: </strong><span id=\"edit-hobbies\" class=\"editable\"> ").concat(hobbies, " </span></p>\n        <h2>References:</h2>\n       <p><strong> Reference Name: </strong><span id=\"edit-refrence_name\" class=\"editable\"> ").concat(reference_name, " </span></p>\n       <p><strong> Reference Contact: </strong><span id=\"edit-refrence_contact\" class=\"editable\"> ").concat(reference_contact, " </span></p>\n        <h2>Cover Letter:</h2>\n       <p><strong> Cover Letter: </strong><span id=\"edit-cover_letter\" class=\"editable\"> ").concat(cover_letter, " </span></p>\n        \n    ");
+        // download link creation
+        var downloadlink = document.createElement('a');
+        downloadlink.href = 'data:text/html;charset-utf-8,' + encodeURIComponent(resumeOutput);
+        downloadlink.download = uniquepath;
+        downloadlink.textContent = 'download your 2024 resume';
+        // display the output resume
         var resumeOutputElement = document.getElementById('resumeOutput');
         if (resumeOutputElement) {
             resumeOutputElement.innerHTML = resumeOutput;
-        }
-        else {
-            console.error('The resumeOutput element is missing');
+            // download functionality
+            resumeOutputElement.appendChild(downloadlink);
+            // editable
+            makeEditable();
         }
     }
     else {
         console.error('Some form fields are missing');
     }
 });
+function makeEditable() {
+    var editableelements = document.querySelectorAll('.editable');
+    editableelements.forEach(function (element) {
+        element.addEventListener('click', function () {
+            var _a;
+            var currentElement = element;
+            var currentValue = currentElement.textContent || "";
+            // replace content
+            if (currentElement.tagName === "P" || 'SPAN') {
+                var input_1 = document.createElement('input');
+                input_1.type = 'text';
+                input_1.value = currentValue;
+                input_1.classList.add('editing-input');
+                input_1.addEventListener('blur', function () {
+                    currentElement.textContent = input_1.value;
+                    currentElement.style.display = 'inline';
+                    input_1.remove();
+                });
+                currentElement.style.display = 'none';
+                (_a = currentElement.parentNode) === null || _a === void 0 ? void 0 : _a.insertBefore(input_1, currentElement);
+                input_1.focus();
+            }
+        });
+    });
+}
