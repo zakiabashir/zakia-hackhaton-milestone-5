@@ -1,180 +1,294 @@
+// Ensure html2pdf is globally available
+declare const html2pdf: any;
 
-document.getElementById('resumeForm')?.addEventListener('submit', function(event) {
+// Get form and preview elements
+
+const form = document.getElementById("resumeForm") as HTMLFormElement;
+const resumePage = document.getElementById("resumePage") as HTMLElement;
+const resumePhoto = document.getElementById("resumePhoto") as HTMLImageElement;
+const resumeName = document.getElementById("resumeName") as HTMLHeadingElement;
+const resumeEmail = document.getElementById("resumeEmail") as HTMLParagraphElement;
+const resumePhone = document.getElementById("resumePhone") as HTMLParagraphElement;
+const resumedob = document.getElementById("resumedob")  as HTMLParagraphElement;
+ const resumegender = document.getElementById("resumegender") as HTMLParagraphElement;
+ const resumeaddress = document.getElementById("resumeaddress") as HTMLParagraphElement;
+const resumedegree = document.getElementById("resumedegree") as HTMLParagraphElement;
+const resumeinstitute = document.getElementById("resumeinstitute") as HTMLParagraphElement;
+const resumestart_Date = document.getElementById("resumestart-date")  as HTMLParagraphElement;
+ const resumeen_date = document.getElementById("resumeend-date") as HTMLParagraphElement;
+ const resumegrade = document.getElementById("resumegrade") as HTMLParagraphElement;
+const resumejobtitle = document.getElementById("resumejobtitle") as HTMLParagraphElement;
+const resumecompanyname = document.getElementById("resumecompanyname") as HTMLParagraphElement;
+const resumestartdate = document.getElementById("resumestartdate")  as HTMLParagraphElement;
+ const resumeendate = document.getElementById("resumeenddate") as HTMLParagraphElement;
+ const resumejobdescription = document.getElementById("resumejobdescription") as HTMLParagraphElement;
+const resumeSkills = document.getElementById("resumeSkills") as HTMLParagraphElement;
+const resumelanguages = document.getElementById("resumelanguages") as HTMLParagraphElement;
+const resumerecoverletter = document.getElementById("resumerecoverletter") as HTMLParagraphElement;
+const resumerefrencename = document.getElementById("resumerefrencename") as HTMLParagraphElement;
+const resumerefrencecontact = document.getElementById("resumerefrencecontact") as HTMLParagraphElement;
+const resumehobbies = document.getElementById("resumehobbies") as HTMLParagraphElement;
+const downloadPdfButton = document.getElementById('download-pdf') as HTMLButtonElement;
+const backButton = document.getElementById("backButton") as HTMLButtonElement;
+const editButton = document.getElementById("editButton") as HTMLButtonElement;
+const resumeContent = document.getElementById("resumeContent") as HTMLDivElement;
+const shareLinkButton = document.getElementById("shareLinkButton") as HTMLButtonElement;
+
+// Handle form submission
+form.addEventListener("submit", async (event: Event) => {
     event.preventDefault();
-    // type assertion
-    const profile_pictureElement = document.getElementById("profile_picture") as HTMLInputElement;
-    const first_nameelement = document.getElementById("first_name") as HTMLInputElement;
-    const last_nameElement = document.getElementById("last_name") as HTMLInputElement;
-    const emailElement = document.getElementById("Email") as HTMLInputElement;
-    const phoneelement = document.getElementById("phone") as HTMLInputElement;
-    const dobElement = document.getElementById("dob") as HTMLInputElement;
-    const genderElement = document.getElementById("gender") as HTMLInputElement;
-    const addressElement = document.getElementById("address") as HTMLInputElement;
+
+    // Collect form values
+
+    const name = (document.getElementById("name") as HTMLInputElement).value;
+    const email = (document.getElementById("email") as HTMLInputElement).value;
+    const phone = (document.getElementById("phone") as HTMLInputElement).value;
+    const dob = (document.getElementById("dob") as HTMLInputElement).value;
+    const gender = (document.getElementById("gender") as HTMLInputElement).value;
+    const address = (document.getElementById("address") as HTMLTextAreaElement).value;
+    const degree = (document.getElementById("degree") as HTMLInputElement).value;
+    const institute = (document.getElementById("institution") as HTMLInputElement).value;
+    const edustartdate = (document.getElementById("edu_start_date") as HTMLInputElement).value;
+    const eduenddate = (document.getElementById("edu_end_date") as HTMLInputElement).value;
+    const grade = (document.getElementById("grade") as HTMLInputElement).value;
+    const job_title = (document.getElementById("job_title") as HTMLInputElement).value;
+    const company_name = (document.getElementById("company_name") as HTMLInputElement).value;
+    const start_date = (document.getElementById("start_date") as HTMLInputElement).value;
+    const end_date = (document.getElementById("end_date") as HTMLInputElement).value;
+    const job_description = (document.getElementById("job_description") as HTMLTextAreaElement).value;
+    const skills = (document.getElementById("skills") as HTMLTextAreaElement).value;
+    const languages = (document.getElementById("languages") as HTMLTextAreaElement).value;
+    const hobbies = (document.getElementById("hobbies") as HTMLTextAreaElement).value;
+    const reference_name = (document.getElementById("reference_name") as HTMLTextAreaElement).value;
+    const reference_contact = (document.getElementById("reference_contact") as HTMLTextAreaElement).value;
+    const coverletter = (document.getElementById("cover_letter") as HTMLTextAreaElement).value;
+    const photoInput = document.getElementById("photo") as HTMLInputElement;
+
+    const photoFile = photoInput.files ? photoInput.files[0] : null;
+    let photoBase64 = '';
+
+    if (photoFile) {
+        photoBase64 = await fileToBase64(photoFile);
+        // Store the photo in localStorage instead of passing it in the URL
+        localStorage.setItem("resumePhoto", photoBase64);
+        resumePhoto.src = photoBase64;
+    }
+
+    // Populate the resume preview
+    resumeName.textContent = name;
+    resumeEmail.textContent = `Email: ${email}`;
+    resumePhone.textContent = `Phone: ${phone}`;
+    resumedob.textContent = `Dtae of Birth: ${dob}`;
+    resumegender.textContent = `Gender: ${gender}`;
+    resumeaddress.textContent = `Address: ${address}`;
+    resumedegree.textContent = `Degree: ${degree}`;
+    resumeinstitute.textContent = `Institute: ${institute}`;
+    resumestart_Date.textContent = `Start-Date: ${start_date}`;
+    resumeen_date.textContent = `End-Dte: ${end_date}`;
+    resumejobtitle.textContent = ` Job-Title: ${job_title}`;
+    resumecompanyname.textContent = `Company-Name: ${company_name}`;
+    resumestartdate.textContent = `Start-Date: ${edustartdate}`;
+    resumeendate.textContent = `End-Date ${eduenddate}`;
+    resumejobdescription.textContent = `Job-description: ${job_description}`;
+    resumeSkills.textContent = `skills: ${skills}`;
+    resumelanguages.textContent = `Languages: ${languages}`;
+    resumehobbies.textContent = `Hobbies: ${hobbies}`;
+    resumerefrencename.textContent = `Refrence-name: ${reference_name}`;
+    resumerefrencecontact.textContent = `Reference-contact: ${reference_contact}`;
+    resumerecoverletter.textContent = `Cover-letter: ${coverletter}`;
     
-    const job_titleElement = document.getElementById("job_title") as HTMLInputElement;
-    const company_nameElement = document.getElementById("company_name") as HTMLInputElement;
-    const start_dateElement = document.getElementById("start_date") as HTMLInputElement;
-    const end_dateElement = document.getElementById("end_date") as HTMLInputElement;
-    const job_descriptionElement = document.getElementById("job_description") as HTMLInputElement;
-    const degreeElement = document.getElementById("degree") as HTMLInputElement;
-    const institutionElement = document.getElementById("institution") as HTMLInputElement;
-    const edu_start_dateElement = document.getElementById("edu_start_date") as HTMLInputElement;
-    const edu_end_dateElement = document.getElementById("edu_end_date") as HTMLInputElement;
-    const gradeElement = document.getElementById("grade") as HTMLInputElement;
-    const skillsElement = document.getElementById("skills") as HTMLInputElement;
-    const languagesElement = document.getElementById("languages") as HTMLInputElement;
-    const hobbiesElement = document.getElementById("hobbies") as HTMLInputElement;
-    const reference_nameElement = document.getElementById("reference_name") as HTMLInputElement;
-    const reference_contactElement = document.getElementById("reference_contact") as HTMLInputElement;
-    const cover_letterelement = document.getElementById("cover_letter") as HTMLTextAreaElement;
-const cvpathurlelement = document.getElementById("username") as HTMLInputElement;
-    if( profile_pictureElement &&first_nameelement && last_nameElement && emailElement && phoneelement && dobElement && genderElement && addressElement && job_titleElement && company_nameElement && start_dateElement && end_dateElement && job_descriptionElement && degreeElement &&institutionElement && edu_start_dateElement &&edu_end_dateElement && gradeElement && skillsElement && languagesElement && hobbiesElement && reference_nameElement &&reference_contactElement &&cover_letterelement && cvpathurlelement) {
-const first_name = first_nameelement.value;
-const last_name = last_nameElement.value;
-const Email = emailElement.value;
-const phone = phoneelement.value;
-const dob = dobElement.value;
-const gender = genderElement.value;
-const address = addressElement.value;
-// profile picture
-const profile_picture = profile_pictureElement.files?.[0];
-const profilepictureurl = profile_picture?URL.createObjectURL(profile_picture) :"";
-const job_title = job_titleElement.value;
-const company_name = company_nameElement.value;
-const start_date = start_dateElement.value;
-const end_date = end_dateElement.value;
-const  job_description =  job_descriptionElement.value ;
-const degree = degreeElement.value;
-const institution = institutionElement.value;
-const edu_start_date = edu_start_dateElement.value;
-const edu_end_date = edu_end_dateElement.value;
-const grade = gradeElement.value;
-const skills = skillsElement.value;
-const languages = languagesElement.value;
- const hobbies = hobbiesElement.value;
- const reference_name = reference_nameElement.value;
-const reference_contact = reference_contactElement.value;
-const cover_letter = cover_letterelement.value;
-// cv-path url
-const cv_path = cvpathurlelement.value
-const uniquepath = `resume/${cv_path.replace(/\s+/g, '_')}_cv.html`
+
+    // Hide form and show resume page
+    document.querySelector(".container")?.classList.add("hidden");
+    resumePage.classList.remove("hidden");
+
+    // Generate shareable link without the photo
+    const queryParams = new URLSearchParams({
+        name: name,
+        email: email,
+        phone: phone,
+        dob:dob,
+        gender:gender,
+        address:address,
+        degree: degree,
+        institute:institute,
+        edustartdate:edustartdate,
+        eduenddate:eduenddate,
+        grade:grade,
+        job_title:job_title,
+        start_date:start_date,
+        end_date:end_date,
+        job_description:job_description,
+        skills: skills,
+        hobbies:hobbies,
+        languages:languages,
+        reference_name:reference_name,
+        reference_contact:reference_contact,
+        coverletter:coverletter
+    });
+
+    const uniqueUrl = `${window.location.origin}?${queryParams.toString()}`;
+    shareLinkButton.addEventListener("click", () => {
+        navigator.clipboard.writeText(uniqueUrl);
+        alert('Shareable link copied to clipboard!');
+    });
+
+    window.history.replaceState(null, '', `?${queryParams.toString()}`);
+});
 
 
+// Convert photo to Base64
+function fileToBase64(file: File): Promise<string> {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onloadend = () => resolve(reader.result as string);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+    });
+}
 
-        const resumeOutput = `
-            <h1>Your Generated CV</h1>
+// Add back button functionality to go back to the form
+backButton.addEventListener("click", () => {
+    // Show the form again and hide the resume preview
+    document.querySelector(".container")?.classList.remove("hidden");
+    resumePage.classList.add("hidden");
 
-            ${profilepictureurl? `<img src="${profilepictureurl} alt="profile picture" class="profile-picture" `: ""}
-        <h2>Personal Info  </h2>
-        <p><strong>First Name:</strong><span id="edit-first_name" class="editable">  ${first_name} </span></p>
-        <p><strong>Last Name:</strong><span id="edit-last_name" class="editable">  ${last_name}</span></p
-       <p><strong> Email: </strong><span id="edit-Email" class="editable"> ${emailElement.value}</span></p>
-        <p><strong>Phone: </strong><span id="edit-phone" class="editable"> ${phoneelement.value}</span></p>
-        <p><strong>Date of Birth:</strong><span id="edit-dob" class="editable"> ${dob}</span></p>
-        <p><strong>Gender: </strong><span id="edit-gender" class="editable"> ${gender}</span></p>
-       <p><strong> Address: </strong><span id="edit-address" class="editable"> ${address}</span></p>
-        
-        <h2>Work Experience</h2>
-       <p><strong> Job Title: </strong><span id="edit-job_title" class="editable"> ${job_title}</span></p>
-       <p><strong> Company Name: </strong><span id="edit-company_name" class="editable"> ${company_name}</span></p>
-       <p><strong> Start Date: </strong><span id="edit-start_date" class="editable"> ${start_date}</span></p>
-        <p><strong>End Date::</strong><span id="edit-end_date" class="editable"> ${end_date}</span></p>
-        <p><strong>Job Description: </strong><span id="edit-job_description" class="editable"> ${job_description} </span></p>
-        <h2>Education </h2>
-        <p><strong>Degree: </strong><span id="edit-degree" class="editable">${degree}  </span></p>
-       <p><strong>  Institution: </strong><span id="edit-institution" class="editable"> ${institution} </span></p>
-        <p><strong>Start Date: </strong><span id="edit-edu_start_date" class="editable"> ${edu_start_date} </span></p>
-       <p><strong> End Date: </strong><span id="edit-edu_end_date" class="editable"> ${edu_end_date} </span></p>
-       <p><strong> Grade: </strong><span id="edit-grade" class="editable"> ${grade} </span></p>
-        <h2>Skills:</h2> 
-       <p><strong> Skills:</strong><span id="edit-skils" class="editable"> ${skillsElement.value} </span></p>
-       <h2> Languages:</h2> 
-        <p><strong>Languages: </strong><span id="edit-languages" class="editable"> ${languages} </span></p><br>
-        <h2>Hobbies:</h2>
-       <p><strong> Hobbies: </strong><span id="edit-hobbies" class="editable"> ${hobbies} </span></p>
-        <h2>References:</h2>
-       <p><strong> Reference Name: </strong><span id="edit-refrence_name" class="editable"> ${reference_name} </span></p>
-       <p><strong> Reference Contact: </strong><span id="edit-refrence_contact" class="editable"> ${reference_contact} </span></p>
-        <h2>Cover Letter:</h2>
-       <p><strong> Cover Letter: </strong><span id="edit-cover_letter" class="editable"> ${cover_letter} </span></p>
-        
-    `;
-// download link creation
-const downloadlink = document.createElement('a')
-downloadlink.href = 'data:text/html;charset-utf-8,' + encodeURIComponent(resumeOutput)
-downloadlink.download = uniquepath;
-downloadlink.textContent = 'download your 2024 resume';
+    // Optionally clear query parameters
+    window.history.replaceState(null, '', '/');
+});
 
-// display the output resume
-        const resumeOutputElement = document.getElementById('resumeOutput');
-        if(resumeOutputElement) {
-            resumeOutputElement.innerHTML = resumeOutput;
-            // **==============
-            resumeOutputElement.classList.remove('hidden');
-            // creation of conatainer button
-            const containerbutton = document.createElement('div');
-            containerbutton.id = "containerbutton";
-            resumeOutputElement.appendChild(containerbutton);
-            // add download pdf button
-            const downloadbutton = document.createElement('button');
-            downloadbutton.textContent = "Download as PDF";
-            downloadbutton.addEventListener("click", () => {
-                window.print(); // open the dialog, allowing the user to save as PDF.
-            });
-            containerbutton.appendChild(downloadbutton);
-            // add  shareable link button
-            const sharelinkbutton = document.createElement('button');
-            sharelinkbutton.textContent = "copy shareable Link";
-            sharelinkbutton.addEventListener('click',  () => {
-                try{
-                    // create a unique shareable link
-                    const shareablelink = `https://yourdomain.com/resume/${cv_path.replace(/\s+/g, '_')}_cv.html`;
-                // use clipboard APIto copy the shareablelink
-                navigator.clipboard.writeText(shareablelink);
-                alert ('shareable link copied to clipboard!');
-                }
-                catch(err){
-                    console.error('Failed to copy Link:', err);
-                    alert ('shareable link copied to clipboard. Please try again');
-                }
-            });
-            containerbutton.appendChild(sharelinkbutton);
-            // download functionality
-            resumeOutputElement.appendChild(downloadlink)
-            // editable
-        makeEditable();
+// Add edit button functionality
+editButton.addEventListener("click", () => {
+    // Populate the form with current resume data for editing
+    updateFormFromResume();
+
+    // Show the form again for editing
+    document.querySelector(".container")?.classList.remove("hidden");
+    resumePage.classList.add("hidden");
+});
+
+// Function to update the form fields with current resume data
+function updateFormFromResume() {
+    
+    (document.getElementById("name") as HTMLInputElement).value = resumeName.textContent || '';
+    (document.getElementById("email") as HTMLInputElement).value = resumeEmail.textContent?.replace('Email: ', '') || '';
+    (document.getElementById("phone") as HTMLInputElement).value = resumePhone.textContent?.replace('Phone: ', '') || '';
+    (document.getElementById("dob") as HTMLInputElement).value = resumedob.textContent?.replace ('Dtae of Birth: ', '') || '';
+    (document.getElementById("gender") as HTMLInputElement).value = resumegender.textContent?.replace ('Gender: ', '') || '';
+    (document.getElementById("address") as HTMLTextAreaElement).value = resumeaddress.textContent?.replace ('Address: ', '') || '';
+    (document.getElementById("degree") as HTMLInputElement).value = resumedegree.textContent?.replace ('Degree: ', '') || '';
+    (document.getElementById("institution") as HTMLInputElement).value = resumeinstitute.textContent?.replace ('Institute: ', '') || '';
+     (document.getElementById("edu_start_date") as HTMLInputElement).value = resumestart_Date.textContent?.replace ('Star-Dtae: ', '') || '';
+    (document.getElementById("edu_end_date") as HTMLInputElement).value = resumeen_date.textContent?.replace ('END-Dtae: ', '') || '';
+    (document.getElementById("grade") as HTMLInputElement).value = resumegrade.textContent?.replace ('Grade: ', '') || '';
+    (document.getElementById("job_title") as HTMLInputElement).value = resumejobtitle.textContent?.replace ('Job-Title: ', '') || '';
+   (document.getElementById("company_name") as HTMLInputElement).value = resumecompanyname.textContent?.replace ('Company-Name: ', '') || '';
+   (document.getElementById("start_date") as HTMLInputElement).value = resumestartdate.textContent?.replace ('Start-Date: ', '') || '';
+    (document.getElementById("end_date") as HTMLInputElement).value = resumeendate.textContent?.replace ('End-Date: ', '') || '';
+    (document.getElementById("job_description") as HTMLTextAreaElement).value = resumejobdescription.textContent?.replace ('Job-Description: ', '') || '';
+    (document.getElementById("skills") as HTMLTextAreaElement).value = resumeSkills.textContent?.replace ('Skills: ', '') || '';
+    (document.getElementById("languages") as HTMLTextAreaElement).value = resumelanguages.textContent?.replace ('Languages: ', '') || '';
+   (document.getElementById("hobbies") as HTMLTextAreaElement).value = resumehobbies.textContent?.replace ('Hobbies: ', '') || '';
+    (document.getElementById("reference_name") as HTMLTextAreaElement).value = resumerefrencename.textContent?.replace ('Refrence-Nme: ', '') || '';
+     (document.getElementById("reference_contact") as HTMLTextAreaElement).value = resumerefrencecontact.textContent?.replace ('Refrence-Contact: ', '') || '';
+     (document.getElementById("cover_letter") as HTMLTextAreaElement).value = resumerecoverletter.textContent?.replace ('Cover-Letter: ', '') || '';
+    
+}
+
+// Handle PDF download
+downloadPdfButton.addEventListener('click', () => {
+    if (typeof html2pdf === 'undefined') {
+        alert('Error: html2pdf library is not loaded.');
+        return;
+    }
+
+    const resumeOptions = {
+        margin: 0.5,
+        filename: `resume.pdf`,
+        image: { type: 'jpeg', quality: 1.0 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+    };
+
+    // Generate and download PDF
+    html2pdf()
+        .from(resumeContent)
+        .set(resumeOptions)
+        .save()
+        .catch((error: Error) => {
+            console.error('PDF generation error:', error);
+        });
+});
+
+// Handle query parameters on page load
+window.addEventListener('DOMContentLoaded', () => {
+    const params = new URLSearchParams(window.location.search);
+    const name = params.get('name') || '';
+    const email = params.get('email') || '';
+    const phone = params.get('phone') || '';
+    const dob = params.get('dob') || '';
+    const gender = params.get('gender') || '';
+    const address = params.get('address') || '';
+    const degree = params.get('degree') || '';
+    const institute = params.get('institution') || '';
+    const edustartdate = params.get('edu_start_date') || '';
+    const eduenddate = params.get('edu_end_date') || '';
+    const grade = params.get('grade') || '';
+    const job_title = params.get('job_title') || '';
+    const company_name = params.get('company_name') || '';
+    const start_date = params.get('start_date') || '';
+    const end_date = params.get('end_date') || '';
+    const job_description = params.get('job_description') || '';
+    const skills = params.get('skills') || '';
+    const hobbies = params.get('hobbies') || '';
+    const languages = params.get('languages') || '';
+    const reference_name = params.get('reference_name') || '';
+    const reference_contact = params.get('reference_contact') || '';
+    const coverletter = params.get('Coverletter') || '';
+    
+
+    if (name || email || phone ||dob ||gender || address || degree ||institute || edustartdate || eduenddate 
+        || grade || job_title || company_name || start_date || end_date || job_description  || skills || hobbies ||
+        languages || reference_name || reference_contact || coverletter ) {
+        // Populate the resume preview if query params are present
+        resumeName.textContent = name;
+        resumeEmail.textContent = `Email: ${email}`;
+        resumePhone.textContent = `Phone: ${phone}`;
+        resumedob.textContent = `Date of Birth: ${dob}`;
+    resumegender.textContent = `Gender: ${gender}`;
+    resumeaddress.textContent = `Address: ${address}`;
+    resumedegree.textContent = `Degree: ${degree}`;
+    resumeinstitute.textContent = `Institute: ${institute}`;
+    resumestart_Date.textContent = `Start-Date: ${start_date}`;
+    resumeen_date.textContent = `End-Dte: ${end_date}`;
+    resumejobtitle.textContent = ` Job-Title: ${job_title}`;
+    resumecompanyname.textContent = `Company-Name: ${company_name}`;
+    resumestartdate.textContent = `Start-Date: ${edustartdate}`;
+    resumeendate.textContent = `End-Date ${eduenddate}`;
+    resumejobdescription.textContent = `Job-description: ${job_description}`;
+    resumeSkills.textContent = `skills: ${skills}`;
+    resumelanguages.textContent = `Languages ${languages}`;
+    resumehobbies.textContent = `Hobbies: ${hobbies}`;
+    resumerefrencename.textContent = `Refrence-name: ${reference_name}`;
+    resumerefrencecontact.textContent = `Reference-contact: ${reference_contact}`;
+    resumerecoverletter.textContent = `Cover-letter: ${coverletter}`;
+
+        // Retrieve photo from localStorage (if available)
+        const savedPhoto = localStorage.getItem("resumePhoto");
+        if (savedPhoto) {
+            resumePhoto.src = savedPhoto;
         }
-        else {
-            console.error('resume output container not foud');
-        }
-    } else {
-        console.error('Some form fields are missing');
+
+        // Hide form and show resume page
+        document.querySelector(".container")?.classList.add("hidden");
+        resumePage.classList.remove("hidden");
     }
 });
-function makeEditable(){
-    const editableelements = document.querySelectorAll('.editable');
-    editableelements.forEach(element => {
-        element.addEventListener('click',function(){
-            const currentElement = element as HTMLElement;
-            const currentValue = currentElement.textContent || "" ;
-            // replace content
-            if(currentElement.tagName === "P" || 'SPAN' ){
-                const input = document.createElement('input')
-                input.type = 'text'
-                input.value = currentValue
-                input.classList.add('editing-input')
 
-
-                input.addEventListener('blur', function(){
-                    currentElement.textContent = input.value;
-                    currentElement.style.display = 'inline'
-                    input.remove()
-                })
-
-                currentElement.style.display = 'none'
-                currentElement.parentNode?.insertBefore(input, currentElement)
-                input.focus()
-            }
-        })
-    })
-}
+// CSS for ensuring the image is styled properly
+resumePhoto.style.width = "150px";  // Adjust width as per your requirement
+resumePhoto.style.height = "150px";
+resumePhoto.style.objectFit = "cover";
+resumePhoto.style.borderRadius = "50%";  // Circular image
+resumePhoto.style.display = "block";
+resumePhoto.style.margin = "0 auto";
